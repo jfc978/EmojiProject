@@ -5,5 +5,6 @@ Clean original posts and tokenize into ordered lists for each post. Store as jso
 @author: James
 """
 
+# May need to go over once and add spaces between all emojis
 
 
