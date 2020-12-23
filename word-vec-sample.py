@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import nltk
+import json
 nltk.download('punkt')
 SENT_DETECTOR = nltk.data.load('tokenizers/punkt/english.pickle')
 
@@ -18,30 +19,36 @@ from matplotlib.font_manager import FontProperties
 
 
 sample_file = "christmas.txt"
+original_dir = "data/original"
+parsed_dir = "data/parsed"
+
 
 if __name__ == '__main__':
     d = dirname(abspath(__file__)) # /../EmojiProject
-    data_files = os.path.join(d, "data/original")
-    filepath = os.path.join(data_files, sample_file)
     
+    #data file directories
+    data_files = os.path.join(d, original_dir)
+    parsed_files = os.path.join(d, parsed_dir)
     
-    #open sample text
-    openfile = open(filepath, encoding="utf8")
-    text = openfile.read()
-    #initial tokenization
-    words = word_tokenize(text)
-    
-    #Very basic parsing of emotes
-    #Create list to store tokenized words/emoji
-    parsed_text = []
-    emoji_counter = 0
-    
+    #Very basic parsing of emote
+    #get list of all files in data directory
     files = os.listdir(data_files)
     for file in files:
+        #Create list to store tokenized words/emoji
+        parsed_text = []
+        emoji_counter = 0
+        
+        #open target file
         filepath = os.path.join(data_files, file)
         openfile = open(filepath, encoding="utf8")
+        
+        #get text from file
         text = openfile.read()
+        
+        #tokenize
         words = word_tokenize(text)
+        
+        #filter emojis from words
         for word in words:
             word = str.lower(word)
             emojis = []
@@ -59,6 +66,16 @@ if __name__ == '__main__':
             if(len(word) > 1):
                 parsed_text.append(word)
             
+            #output to json
+            dir_write = os.path.join(parsed_files, file.replace('.txt','.json'))
+            json_dict = {}
+            json_dict["tokenized"] = parsed_text
+            with open(dir_write, mode="w") as json_output:
+                json.dump(json_dict, json_output, indent=4)
+    
+    ###################################        
+    #only uses data from last file
+            
     #word2vec copy-pasta
     # train model
     model = Word2Vec([parsed_text], min_count=1)
@@ -68,7 +85,7 @@ if __name__ == '__main__':
     words = list(model.wv.vocab)
     print(words)
     # access vector for one word
-    print(model['🍆'])
+    print(model['😂'])
     # save model
     model.save('model.bin')
     # load model
@@ -94,5 +111,7 @@ if __name__ == '__main__':
             break
         plt.annotate(word, xy=(result[i, 0], result[i, 1]),fontproperties=prop)
     plt.show()
+    
+
     
     
