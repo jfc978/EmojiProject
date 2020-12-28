@@ -17,8 +17,9 @@ from sklearn.decomposition import PCA
 from matplotlib import pyplot as plt
 from matplotlib.font_manager import FontProperties
 
+import EmojiProject.models 
 
-sample_file = "christmas.txt"
+
 original_dir = "data/original"
 parsed_dir = "data/parsed"
 
@@ -66,12 +67,12 @@ if __name__ == '__main__':
             if(len(word) > 1):
                 parsed_text.append(word)
             
-            #output to json
-            dir_write = os.path.join(parsed_files, file.replace('.txt','.json'))
-            json_dict = {}
-            json_dict["tokenized"] = parsed_text
-            with open(dir_write, mode="w") as json_output:
-                json.dump(json_dict, json_output, indent=4)
+        #output to json
+        dir_write = os.path.join(parsed_files, file.replace('.txt','.json'))
+        json_dict = {}
+        json_dict["tokenized"] = parsed_text
+        with open(dir_write, mode="w") as json_output:
+            json.dump(json_dict, json_output, indent=4)
     
     ###################################        
     #only uses data from last file
