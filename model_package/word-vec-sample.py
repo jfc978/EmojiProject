@@ -17,8 +17,6 @@ from sklearn.decomposition import PCA
 from matplotlib import pyplot as plt
 from matplotlib.font_manager import FontProperties
 
-import EmojiProject.models 
-
 
 original_dir = "data/original"
 parsed_dir = "data/parsed"

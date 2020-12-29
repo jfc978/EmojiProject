@@ -11,10 +11,10 @@ import numpy as np
 #define dataset object
 class Data:
     def __init__(self):
-        original_dir = "data/original"
-        parsed_dir = "data/parsed"
+        original_dir = "data\\original"
+        parsed_dir = "data\\parsed"
 
-        d = dirname(abspath(__file__)) # /../EmojiProject
+        d = dirname(dirname(abspath(__file__))) # /../EmojiProject
     
         #data file directories
         data_files = os.path.join(d, original_dir)
@@ -24,7 +24,7 @@ class Data:
         #TODO
         
         #create list from parsed file directories
-        files = os.listdir(data_files)
+        files = os.listdir(parsed_files)
         file_list = []
         for file in files:
             #open target file
@@ -37,18 +37,23 @@ class Data:
         self.training = []
         self.testing = []
         index = []
-        training_num = round(ratio*len(self.files))
+        training_num = round(ratio*len(self.files))-1
         
         #randomly select training_num files from file list, adding to index to filter
         for i in range(0,training_num):
-            data_point = np.random.randint(0,training_num)
-            if data_point not in index:
-                index.append(data_point)
-                self.training.append(self.files[data_point])
+            data_point = np.random.randint(0,len(self.files))
+            while data_point in index:
+                data_point = np.random.randint(0,len(self.files)) 
+            index.append(data_point)
+            self.training.append(self.files[data_point])
         
         #add all files not in training set to testing set
         for i in range(0,len(self.files)):
             if i not in index:
-                self.testing.append(self.files[data_point])
+                self.testing.append(self.files[i])
         
         return self.training, self.testing
+    
+if __name__ == '__main__':
+    data = Data()
+    training, testing = data.split_data(0.7)
